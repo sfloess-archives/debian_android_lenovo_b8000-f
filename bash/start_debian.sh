@@ -7,6 +7,8 @@ export STORAGE_DIR=/storage/sdcard1
 export DEB_DIR=${STORAGE_DIR}/debian
 
 mkdir -p ${STORAGE_DIR}
+mkdir -p ${DEB_DIR}/opt/host/data
+mkdir -p ${DEB_DIR}/opt/host/storage
 
 echo Starting `date` > ${LOG_FILE}
 
@@ -17,11 +19,15 @@ mount -t sysfs /sys     ${DEB_DIR}/sys/     >> ${LOG_FILE} 2>&1
 mount -o bind  /dev     ${DEB_DIR}/dev/     >> ${LOG_FILE} 2>&1
 mount -o bind  /dev/pts ${DEB_DIR}/dev/pts/ >> ${LOG_FILE} 2>&1
 
+mount -o bind /data    ${DEB_DIR}/opt/host/data    >> ${LOG_FILE} 2>&1
+mount -o bind /storage/emulated/0 ${DEB_DIR}/opt/host/storage >> ${LOG_FILE} 2>&1
+
 #chroot  ${DEB_DIR} /bin/su - root
 
 #nohup /system/xbin/busybox chroot ${DEB_DIR} /bin/bash /flossware/startup.sh >> ${LOG_FILE} 
 #chroot ${DEB_DIR} /bin/bash /flossware/startup.sh & >> ${LOG_FILE} 
 #nohup chroot ${DEB_DIR} /bin/bash -l /flossware/startup.sh & >> ${LOG_FILE} 
 #nohup chroot ${DEB_DIR} /bin/su - root -s bash -c /flossware/startup.sh & >> ${LOG_FILE} 
+
 chroot ${DEB_DIR} /bin/su - root -c /flossware/startup.sh >> ${LOG_FILE} 
 

@@ -43,3 +43,12 @@ mount -o bind /mnt/admin-ap/root /root
 
 mount -a
 
+IP_ADDRESS=`ip -f inet -o addr show wlan0 | awk -F 'inet' '{print }' | cut -f 1 -d '/' | tr -d ' '`
+HOST_NAME=`nslookup ${IP_ADDRESS} | grep name | cut -f 2 -d '=' | cut -f 1 -d '.' | tr -d ' '`
+
+if [ "${HOST_NAME}" != "" ]
+then
+	hostname ${HOST_NAME}
+else
+	hostname -F /etc/hostname
+fi
